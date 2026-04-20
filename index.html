@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wealth-salon CR Gallery</title>
+<style>
+  :root {
+    --navy: #0A2463;
+    --navy-light: #1a3a7a;
+    --navy-dark: #061840;
+    --gold: #C9A84C;
+    --gold-light: #e0c070;
+    --gold-dark: #a08030;
+    --white: #ffffff;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-400: #adb5bd;
+    --gray-600: #6c757d;
+    --gray-800: #343a40;
+    --font: 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(10,36,99,0.15);
+    --shadow-hover: 0 8px 40px rgba(10,36,99,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background: #f0f2f8;
+    color: var(--gray-800);
+    line-height: 1.6;
+  }
+
+  /* ===== PASSWORD SCREEN ===== */
+  #pw-screen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-light) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .pw-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 20px;
+    padding: 48px 40px;
+    width: min(420px, 90vw);
+    text-align: center;
+    backdrop-filter: blur(16px);
+  }
+  .pw-logo {
+    width: 48px;
+    height: 48px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 22px;
+    color: var(--navy);
+  }
+  .pw-title {
+    color: var(--white);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .pw-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    margin-bottom: 32px;
+  }
+  .pw-input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(201,168,76,0.4);
+    background: rgba(255,255,255,0.08);
+    color: var(--white);
+    font-size: 18px;
+    letter-spacing: 0.15em;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 14px;
+  }
+  .pw-input:focus { border-color: var(--gold); }
+  .pw-input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 0.05em; font-size: 14px; }
+  .pw-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--navy-dark);
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .pw-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,168,76,0.4); }
+  .pw-error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 10px;
+    min-height: 18px;
+    display: none;
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  #main-content { display: none; }
+
+  /* ===== STICKY NAV ===== */
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,36,99,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .nav-brand {
+    color: var(--gold);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-brand-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, #1a4a8a 100%);
+    padding: 72px 24px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -40px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .hero-title {
+    color: var(--white);
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .hero-title span { color: var(--gold); }
+  .hero-sub {
+    color: rgba(255,255,255,0.6);
+    font-size: clamp(14px, 2vw, 17px);
+    margin-bottom: 36px;
+    letter-spacing: 0.02em;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 120px;
+  }
+  .stat-num {
+    color: var(--gold);
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== SECTION COMMON ===== */
+  .section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 64px 24px;
+  }
+  .section-header {
+    margin-bottom: 36px;
+  }
+  .section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: var(--gold);
+    display: inline-block;
+  }
+  .section-title {
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+  .section-desc {
+    color: var(--gray-600);
+    font-size: 15px;
+    margin-top: 8px;
+  }
+  .sep {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gray-200), transparent);
+  }
+
+  /* ===== V3 GALLERY ===== */
+  #v3-gallery-section {
+    background: white;
+    padding: 64px 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  #v3-gallery-section .section { padding-top: 0; padding-bottom: 0; }
+  .v3-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--navy-dark);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-left: 10px;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  .v3-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .banner-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--gray-200);
+  }
+  .banner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+  .banner-img-wrap {
+    width: 100%;
+    background: var(--gray-100);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .banner-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  /* aspect ratio containers */
+  .ar-1x1 { aspect-ratio: 1/1; }
+  .ar-4x5 { aspect-ratio: 4/5; }
+  .ar-9x16 { aspect-ratio: 9/16; max-height: 360px; }
+  .banner-card-body {
+    padding: 14px 16px;
+  }
+  .banner-type-tag {
+    display: inline-block;
+    background: rgba(10,36,99,0.07);
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .banner-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .banner-card-note {
+    font-size: 12px;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+  .revision-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-dark);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+  }
+
+  /* ===== TIMELINE ===== */
+  #timeline-section {
+    background: linear-gradient(135deg, #f0f2f8 0%, #e8ecf5 100%);
+    padding: 64px 0;
+  }
+  #timeline-section .section { padding-top: 0; padding-bottom: 0; }
+
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 8px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.2));
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 36px;
+  }
+  .tl-dot {
+    position: absolute;
+    left: -33px;
+    top: 5px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.2);
+  }
+  .tl-dot.current { background: var(--navy); }
+  .tl-version {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .tl-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .tl-desc {
+    font-size: 14px;
+    color: var(--gray-600);
+    margin-bottom: 12px;
+  }
+  .tl-changes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tl-changes li {
+    font-size: 13px;
+    color: var(--gray-800);
+    padding: 8px 12px;
+    background: white;
+    border-radius: 8px;
+    border-left: 3px solid var(--gold);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .tl-changes li .change-icon { flex-shrink: 0; font-style: normal; }
+
+  /* ===== ACCORDION ===== */
+  .accordion-wrap {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .accordion-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    gap: 12px;
+  }
+  .accordion-btn:hover { background: var(--gray-100); }
+  .accordion-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .accordion-version {
+    background: var(--navy);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.06em;
+  }
+  .accordion-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .accordion-count {
+    font-size: 12px;
+    color: var(--gray-400);
+    font-weight: 400;
+  }
+  .accordion-arrow {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s, background 0.2s;
+    font-size: 14px;
+    color: var(--navy);
+  }
+  .accordion-btn[aria-expanded="true"] .accordion-arrow {
+    transform: rotate(180deg);
+    background: var(--gold);
+    color: white;
+  }
+  .accordion-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease;
+  }
+  .accordion-inner {
+    padding: 4px 24px 24px;
+    border-top: 1px solid var(--gray-200);
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    padding-top: 16px;
+  }
+
+  /* ===== STRATEGY ===== */
+  #strategy-section {
+    background: white;
+    padding: 64px 0;
+    border-top: 1px solid var(--gray-200);
+  }
+  #strategy-section .section { padding-top: 0; padding-bottom: 0; }
+
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .strategy-card {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 24px;
+    border-left: 4px solid var(--gold);
+  }
+  .strategy-card.wide {
+    grid-column: 1 / -1;
+  }
+  .strategy-card-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 8px;
+  }
+  .strategy-card-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .strategy-card-body {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.7;
+  }
+  .copy-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .copy-item {
+    background: white;
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid var(--gray-200);
+  }
+  .copy-item-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold-dark);
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .copy-item-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.5;
+  }
+  .hook-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .hook-item {
+    background: white;
+    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--gray-200);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .hook-num {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .hook-type {
+    font-size: 11px;
+    color: var(--gold-dark);
+    font-weight: 700;
+    margin-bottom: 2px;
+    letter-spacing: 0.05em;
+  }
+  .hook-text {
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .position-box {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 10px;
+    border: 1px solid var(--gray-200);
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 600;
+    line-height: 1.7;
+  }
+  .n1-box {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .n1-item {}
+  .n1-key {
+    font-size: 11px;
+    color: var(--gray-400);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+  }
+  .n1-val {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6,24,64,0.88);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal-inner {
+    background: white;
+    border-radius: 16px;
+    max-width: min(800px, 95vw);
+    max-height: 95vh;
+    overflow: auto;
+    box-shadow: 0 20px 80px rgba(6,24,64,0.5);
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.95);
+    transition: transform 0.25s;
+  }
+  .modal-overlay.open .modal-inner { transform: scale(1); }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--gray-200);
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+  }
+  .modal-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-600);
+    transition: background 0.15s;
+  }
+  .modal-close:hover { background: var(--gray-200); }
+  .modal-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .modal-img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    display: block;
+  }
+  .modal-info {
+    padding: 20px 24px;
+    width: 100%;
+    background: var(--gray-100);
+    border-top: 1px solid var(--gray-200);
+  }
+  .modal-info-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .modal-info-note {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--navy-dark);
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .footer-brand {
+    color: var(--gold);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .footer-meta {
+    color: rgba(255,255,255,0.35);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ===== UTILS ===== */
+  .data-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  .data-tag.actual {
+    background: rgba(10,36,99,0.1);
+    color: var(--navy);
+    border: 1px solid rgba(10,36,99,0.2);
+  }
+  .data-tag.ai {
+    background: rgba(201,168,76,0.12);
+    color: var(--gold-dark);
+    border: 1px solid rgba(201,168,76,0.25);
+  }
+
+  @media (max-width: 480px) {
+    .copy-compare { grid-template-columns: 1fr; }
+    .n1-box { grid-template-columns: 1fr; }
+    .tl-changes li { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div id="pw-screen" role="dialog" aria-modal="true" aria-labelledby="pw-title">
+  <div class="pw-box">
+    <div class="pw-logo">W</div>
+    <div class="pw-title" id="pw-title">wealth-salon</div>
+    <div class="pw-sub">CR Gallery — 閲覧にはパスワードが必要です</div>
+    <input
+      type="password"
+      id="pw-input"
+      class="pw-input"
+      placeholder="パスワードを入力"
+      autocomplete="off"
+      aria-label="パスワード"
+    />
+    <button class="pw-btn" id="pw-btn" onclick="checkPassword()">アクセス</button>
+    <div class="pw-error" id="pw-error">パスワードが正しくありません</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <!-- NAV -->
+  <nav class="site-nav" aria-label="サイトナビゲーション">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">
+        <span class="nav-brand-dot"></span>
+        wealth-salon CR Gallery
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#v3-gallery-section">v3 最終版</a></li>
+        <li><a href="#timeline-section">改定履歴</a></li>
+        <li><a href="#history-section">v1/v2</a></li>
+        <li><a href="#strategy-section">戦略</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-badge">Confidential — Internal Use Only</div>
+    <h1 class="hero-title">wealth-salon<br><span>CR Gallery</span></h1>
+    <p class="hero-sub">バナー広告CR・戦略・改定履歴 — v1 / v2 / v3</p>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-num">21</div>
+        <div class="stat-label">Total CRs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Versions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">5</div>
+        <div class="stat-label">hookVectors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">v3</div>
+        <div class="stat-label">最終採用版</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- V3 GALLERY -->
+  <section id="v3-gallery-section">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Latest Version</div>
+        <h2 class="section-title">
+          v3 最終版バナー
+          <span class="v3-badge">FINAL</span>
+        </h2>
+        <p class="section-desc">2026-04-19確定。6点の改定ポイントを反映した最終採用クリエイティブ。</p>
+      </div>
+      <div class="v3-grid" id="v3-grid"></div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline-section">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Version History</div>
+        <h2 class="section-title">改定履歴タイムライン</h2>
+        <p class="section-desc">v1初稿からv3最終版までの進化と改定ポイント。</p>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-version">Version 1</div>
+          <div class="tl-title">v1 初稿（11枚）</div>
+          <div class="tl-desc">最初の仮説検証バッチ。5本の基本フックパターン + A系・B系の追加仮説。</div>
+          <ul class="tl-changes">
+            <li><span class="change-icon">+</span>基本5本（共感型 / 新認知型 / 好奇心型 / 構造告発型 / 結果提示型）</li>
+            <li><span class="change-icon">+</span>A系3本（法人通帳vs個人資産ゼロ / 実績キャッチ / 店舗経営者特化）</li>
+            <li><span class="change-icon">+</span>B系3本（損失訴求 / ゲインフレーム / 顧問税理士挑戦型）</li>
+            <li><span class="change-icon">!</span>「経営者」表現・権威性数字を含む初稿。後の改定で修正へ。</li>
+          </ul>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-version">Version 2</div>
+          <div class="tl-title">v2 精練（5枚）</div>
+          <div class="tl-desc">v1の仮説を5パターンに絞り込み。hookVectors体系の確立。コア5本を磨いた版。</div>
+          <ul class="tl-changes">
+            <li><span class="change-icon">+</span>5本のhookVectorsに対応した純化バナーセット</li>
+            <li><span class="change-icon">+</span>常識否定型 / 共感型 / 好奇心型 / 結果提示型 / 構造告発型の体系化</li>
+            <li><span class="change-icon">!</span>「年商2億の経営者」「統合アドバイザー」等、後にNGとなる表現が残存</li>
+            <li><span class="change-icon">!</span>権威性数字（300社・純資産6億）撤去前の版</li>
+          </ul>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot current"></div>
+          <div class="tl-version">Version 3 — FINAL</div>
+          <div class="tl-title">v3 最終版（5枚）</div>
+          <div class="tl-desc">2026-04-19確定。6点の改定ポイントを反映。権威性撤去・「経営者」→「事業者」統一・具体コピーへの刷新。</div>
+          <ul class="tl-changes">
+            <li><span class="change-icon">1</span><strong>01共感型</strong>：通帳比較 → 棒グラフ対比。視覚的インパクト最大化</li>
+            <li><span class="change-icon">2</span><strong>02メソッド型</strong>：「統合アドバイザーという選択肢」（自分目線NG）→「事業者の資産設計図」</li>
+            <li><span class="change-icon">3</span><strong>03気づき型</strong>：「なぜ年商2億の経営者は〜」（ツッコミどころ）→「事業が大きくなるほど、個人資産の設計が後回しになる」</li>
+            <li><span class="change-icon">4</span><strong>04BeforeAfter</strong>：「法人×個人の一体設計」（抽象）→ BEFORE/AFTER通帳対比構造に</li>
+            <li><span class="change-icon">5</span><strong>05問い型</strong>：「税理士・FP・保険、全員バラバラ」（意味不明）→「法人のお金を、個人に移せていますか」</li>
+            <li><span class="change-icon">6</span><strong>全体</strong>：権威性数字（300社・純資産6億）撤去 / 「経営者」→「事業者」統一</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- V1 / V2 HISTORY -->
+  <section id="history-section" style="background:white; padding: 64px 0; border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);">
+    <div class="section" style="padding-top:0;padding-bottom:0;">
+      <div class="section-header">
+        <div class="section-eyebrow">Previous Versions</div>
+        <h2 class="section-title">v1 / v2 アーカイブ</h2>
+        <p class="section-desc">改定前のクリエイティブ。仮説の変遷を参照する際に使用。</p>
+      </div>
+
+      <!-- V2 accordion -->
+      <div class="accordion-wrap">
+        <button
+          class="accordion-btn"
+          aria-expanded="false"
+          aria-controls="accordion-v2"
+          onclick="toggleAccordion(this)"
+        >
+          <div class="accordion-label">
+            <span class="accordion-version">v2</span>
+            <span class="accordion-title">v2 精練版 <span class="accordion-count">5枚</span></span>
+          </div>
+          <div class="accordion-arrow">&#9660;</div>
+        </button>
+        <div class="accordion-body" id="accordion-v2" role="region">
+          <div class="accordion-inner">
+            <div class="gallery-grid" id="v2-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- V1 accordion -->
+      <div class="accordion-wrap">
+        <button
+          class="accordion-btn"
+          aria-expanded="false"
+          aria-controls="accordion-v1"
+          onclick="toggleAccordion(this)"
+        >
+          <div class="accordion-label">
+            <span class="accordion-version">v1</span>
+            <span class="accordion-title">v1 初稿 <span class="accordion-count">11枚</span></span>
+          </div>
+          <div class="accordion-arrow">&#9660;</div>
+        </button>
+        <div class="accordion-body" id="accordion-v1" role="region">
+          <div class="accordion-inner">
+            <div class="gallery-grid" id="v1-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRATEGY -->
+  <section id="strategy-section">
+    <div class="section" style="padding-top:64px;padding-bottom:64px;">
+      <div class="section-header">
+        <div class="section-eyebrow">Strategy</div>
+        <h2 class="section-title">戦略コンテキスト</h2>
+        <p class="section-desc">
+          全CRの根拠となる戦略データ。
+          <span class="data-tag actual">実データ</span> = strategy.jsonからの直接引用。
+          <span class="data-tag ai">AI推論</span> = Agentの分析・推論テキスト。
+        </p>
+      </div>
+
+      <div class="strategy-grid">
+
+        <!-- コアコンセプト -->
+        <div class="strategy-card">
+          <div class="strategy-card-eyebrow">Core Concept <span class="data-tag actual">実データ</span></div>
+          <div class="strategy-card-title">「法人で作る個人資産」</div>
+          <div class="strategy-card-body">2026-04-19確定。法人と個人のキャッシュフローを世帯全体で一体設計するというコンセプトの核。</div>
+        </div>
+
+        <!-- ポジション -->
+        <div class="strategy-card" style="grid-column: span 1;">
+          <div class="strategy-card-eyebrow">Positioning <span class="data-tag actual">実データ</span></div>
+          <div class="strategy-card-title">司令塔ポジション</div>
+          <div class="position-box">「法人と個人のキャッシュフローを世帯全体で一体設計する統合アドバイザー（税理士でもFPでも保険屋でもない司令塔）」</div>
+        </div>
+
+        <!-- N1ターゲット -->
+        <div class="strategy-card">
+          <div class="strategy-card-eyebrow">N1 Target <span class="data-tag actual">実データ</span></div>
+          <div class="strategy-card-title">百瀬系ペルソナ</div>
+          <div class="n1-box">
+            <div class="n1-item"><div class="n1-key">層</div><div class="n1-val">準顕在層</div></div>
+            <div class="n1-item"><div class="n1-key">業態</div><div class="n1-val">店舗2店舗</div></div>
+            <div class="n1-item"><div class="n1-key">経営形態</div><div class="n1-val">夫婦経営</div></div>
+            <div class="n1-item"><div class="n1-key">年商</div><div class="n1-val">1億</div></div>
+            <div class="n1-item" style="grid-column:1/-1"><div class="n1-key">課題</div><div class="n1-val">個人資産ゼロ感</div></div>
+          </div>
+        </div>
+
+        <!-- ブランドカラー -->
+        <div class="strategy-card">
+          <div class="strategy-card-eyebrow">Brand Color <span class="data-tag actual">実データ</span></div>
+          <div class="strategy-card-title">ネイビー ＆ ゴールド</div>
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <div style="display:flex; align-items:center; gap:8px; flex:1;">
+              <div style="width:36px; height:36px; border-radius:8px; background:#0A2463; flex-shrink:0;"></div>
+              <div>
+                <div style="font-size:11px; color:var(--gray-400); font-weight:600;">NAVY</div>
+                <div style="font-size:13px; font-weight:700; color:var(--navy);">#0A2463</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex:1;">
+              <div style="width:36px; height:36px; border-radius:8px; background:#C9A84C; flex-shrink:0;"></div>
+              <div>
+                <div style="font-size:11px; color:var(--gray-400); font-weight:600;">GOLD</div>
+                <div style="font-size:13px; font-weight:700; color:var(--gold-dark);">#C9A84C</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- メインコピー比較 -->
+        <div class="strategy-card" style="grid-column: 1 / -1;">
+          <div class="strategy-card-eyebrow">Main Copy Comparison <span class="data-tag actual">実データ</span></div>
+          <div class="strategy-card-title">メインコピーA vs B</div>
+          <div class="copy-compare">
+            <div class="copy-item">
+              <div class="copy-item-label">Copy A — 共感型フック</div>
+              <div class="copy-item-text">「法人は増えた。個人は空のまま」</div>
+            </div>
+            <div class="copy-item">
+              <div class="copy-item-label">Copy B — 新認知フック</div>
+              <div class="copy-item-text">「法人で作れる。個人資産も。」</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- hookVectors -->
+        <div class="strategy-card" style="grid-column: 1 / -1;">
+          <div class="strategy-card-eyebrow">hookVectors — 5パターン <span class="data-tag actual">実データ</span></div>
+          <div class="strategy-card-title">広告フックの5軸</div>
+          <ul class="hook-list">
+            <li class="hook-item">
+              <div class="hook-num">1</div>
+              <div>
+                <div class="hook-type">常識否定型</div>
+                <div class="hook-text">「法人と個人を別々に考えてきた。それ自体が間違いだった」</div>
+              </div>
+            </li>
+            <li class="hook-item">
+              <div class="hook-num">2</div>
+              <div>
+                <div class="hook-type">共感型</div>
+                <div class="hook-text">「法人は黒字。なのに個人口座は10年増えない」</div>
+              </div>
+            </li>
+            <li class="hook-item">
+              <div class="hook-num">3</div>
+              <div>
+                <div class="hook-type">好奇心型</div>
+                <div class="hook-text">「なぜ年商2億の経営者は、個人資産が会社員以下なのか」</div>
+              </div>
+            </li>
+            <li class="hook-item">
+              <div class="hook-num">4</div>
+              <div>
+                <div class="hook-type">結果提示型</div>
+                <div class="hook-text">「設計を変えただけで、個人資産が初めて積み上がった」</div>
+              </div>
+            </li>
+            <li class="hook-item">
+              <div class="hook-num">5</div>
+              <div>
+                <div class="hook-type">構造告発型</div>
+                <div class="hook-text">「税理士・FP・保険——3人のプロに相談しても、誰も全体を見ていなかった」</div>
+              </div>
+            </li>
+          </ul>
+          <div style="margin-top:12px; padding:10px 14px; background:rgba(201,168,76,0.08); border-radius:8px; border:1px solid rgba(201,168,76,0.2); font-size:12px; color:var(--gold-dark);">
+            <span class="data-tag ai">AI推論</span> hookVectors（具体フック）はフロントに前面表示。コンセプト「法人で作る個人資産」はポジション（バナー内に直接書かない）。
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">wealth-salon CR Gallery</div>
+      <div class="footer-meta">Confidential — Internal Use Only / 2026-04-20</div>
+    </div>
+  </footer>
+
+</div><!-- /#main-content -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title"></div>
+      <button class="modal-close" aria-label="閉じる" onclick="closeModal()">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <img class="modal-img" id="modal-img" src="" alt="" />
+      <div class="modal-info">
+        <div class="modal-info-title" id="modal-info-title"></div>
+        <div class="modal-info-note" id="modal-info-note"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== PASSWORD =====
+const PW = 'mK9xP2wQ';
+
+function checkPassword() {
+  const val = document.getElementById('pw-input').value;
+  if (val === PW) {
+    document.getElementById('pw-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    document.getElementById('pw-error').style.display = 'none';
+    initGalleries();
+    initScrollSpy();
+  } else {
+    const err = document.getElementById('pw-error');
+    err.style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+document.getElementById('pw-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkPassword();
+});
+
+// ===== BANNER DATA =====
+const v3Banners = [
+  {
+    file: 'images/v3/banner_v3_01_共感型.png',
+    type: '共感型',
+    title: '01 共感型',
+    size: '1080x1080 (1:1)',
+    ar: 'ar-1x1',
+    note: '通帳比較 → 棒グラフ対比に変更。「法人は増えた。個人は空のまま」の視覚的インパクトを最大化。',
+    revision: '通帳比較 → 棒グラフ対比'
+  },
+  {
+    file: 'images/v3/banner_v3_02_メソッド型.png',
+    type: 'メソッド型',
+    title: '02 メソッド型',
+    size: '1080x1350 (4:5)',
+    ar: 'ar-4x5',
+    note: '「統合アドバイザーという選択肢」（自分目線NG）→「事業者の資産設計図」へ変更。',
+    revision: '自分目線NG → 事業者目線'
+  },
+  {
+    file: 'images/v3/banner_v3_03_気づき型.png',
+    type: '気づき型',
+    title: '03 気づき型',
+    size: '1080x1350 (4:5)',
+    ar: 'ar-4x5',
+    note: '「なぜ年商2億の経営者は〜」（ツッコミどころ）→「事業が大きくなるほど、個人資産の設計が後回しになる」へ。',
+    revision: 'ツッコミどころ除去'
+  },
+  {
+    file: 'images/v3/banner_v3_04_BeforeAfter.png',
+    type: 'BeforeAfter型',
+    title: '04 BeforeAfter',
+    size: '1080x1920 (9:16)',
+    ar: 'ar-9x16',
+    note: '「法人×個人の一体設計」（抽象）→ BEFORE/AFTER通帳対比構造へ。具体的なビフォーアフターを可視化。',
+    revision: '抽象概念 → BEFORE/AFTER通帳対比'
+  },
+  {
+    file: 'images/v3/banner_v3_05_問い型.png',
+    type: '問い型',
+    title: '05 問い型',
+    size: '1080x1350 (4:5)',
+    ar: 'ar-4x5',
+    note: '「税理士・FP・保険、全員バラバラ」（意味不明）→「法人のお金を、個人に移せていますか」へ。直接的な問いかけに。',
+    revision: '意味不明コピー → 直接問いかけ'
+  }
+];
+
+const v2Banners = [
+  {
+    file: 'images/v2/banner_01_共感型.png',
+    type: '共感型',
+    title: 'v2-01 共感型',
+    size: '—',
+    ar: 'ar-4x5',
+    note: 'hookVectors共感型の精練版。「法人は黒字。なのに個人口座は10年増えない」フック。',
+    revision: null
+  },
+  {
+    file: 'images/v2/banner_02_常識否定型.png',
+    type: '常識否定型',
+    title: 'v2-02 常識否定型',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「法人と個人を別々に考えてきた。それ自体が間違いだった」フック。',
+    revision: null
+  },
+  {
+    file: 'images/v2/banner_03_好奇心型.png',
+    type: '好奇心型',
+    title: 'v2-03 好奇心型',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「なぜ年商2億の経営者は、個人資産が会社員以下なのか」フック。v3でNGワード修正済み。',
+    revision: null
+  },
+  {
+    file: 'images/v2/banner_04_結果提示型.png',
+    type: '結果提示型',
+    title: 'v2-04 結果提示型',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「設計を変えただけで、個人資産が初めて積み上がった」フック。',
+    revision: null
+  },
+  {
+    file: 'images/v2/banner_05_構造告発型.png',
+    type: '構造告発型',
+    title: 'v2-05 構造告発型',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「税理士・FP・保険——3人のプロに相談しても、誰も全体を見ていなかった」フック。v3で表現修正済み。',
+    revision: null
+  }
+];
+
+const v1Banners = [
+  {
+    file: 'images/v1/banner_01_共感型_4x5.png',
+    type: '共感型',
+    title: 'v1-01 共感型',
+    size: '4:5',
+    ar: 'ar-4x5',
+    note: 'v1初稿の共感型フック。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_02_新認知型_4x5.png',
+    type: '新認知型',
+    title: 'v1-02 新認知型',
+    size: '4:5',
+    ar: 'ar-4x5',
+    note: '「法人で作れる。個人資産も。」の新認知コピー。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_03_好奇心型_1x1.png',
+    type: '好奇心型',
+    title: 'v1-03 好奇心型',
+    size: '1:1',
+    ar: 'ar-1x1',
+    note: '1:1フォーマットの好奇心型フック。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_04_構造告発型_4x5.png',
+    type: '構造告発型',
+    title: 'v1-04 構造告発型',
+    size: '4:5',
+    ar: 'ar-4x5',
+    note: '構造告発型の初稿。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_05_結果提示型_9x16.png',
+    type: '結果提示型',
+    title: 'v1-05 結果提示型',
+    size: '9:16',
+    ar: 'ar-9x16',
+    note: '9:16縦型の結果提示型フック。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_A-01_法人通帳vs個人資産ゼロのギャップ.png',
+    type: 'A-01',
+    title: 'v1-A01 法人通帳vs個人資産ゼロ',
+    size: '—',
+    ar: 'ar-4x5',
+    note: 'ギャップ訴求の通帳対比型。後にv3-01の棒グラフ対比の元になる仮説。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_A-02_並の売上で資産5億_実績キャッチ型.png',
+    type: 'A-02',
+    title: 'v1-A02 実績キャッチ型',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「並の売上で資産5億」実績訴求型。権威性数字はv3で撤去方針となった。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_A-03_店舗経営者特化_直接呼びかけ型.png',
+    type: 'A-03',
+    title: 'v1-A03 店舗経営者特化',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「店舗経営者」への直接呼びかけ型。「経営者」→「事業者」変更の前身。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_B-01_創業時のとりあえず決定が毎月資産を削る損失訴求.png',
+    type: 'B-01',
+    title: 'v1-B01 損失訴求型',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「創業時のとりあえず決定が毎月資産を削る」損失フレーム訴求。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_B-02_ゲインフレーム_絶好のタイミング訴求.png',
+    type: 'B-02',
+    title: 'v1-B02 ゲインフレーム',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「絶好のタイミング」ゲインフレーム訴求型。',
+    revision: null
+  },
+  {
+    file: 'images/v1/banner_B-03_顧問税理士直接挑戦型.png',
+    type: 'B-03',
+    title: 'v1-B03 税理士挑戦型',
+    size: '—',
+    ar: 'ar-4x5',
+    note: '「顧問税理士への直接挑戦」訴求。構造告発型の強化版仮説。',
+    revision: null
+  }
+];
+
+// ===== RENDER BANNERS =====
+function makeBannerCard(b, isV3) {
+  const revisionHtml = (isV3 && b.revision)
+    ? `<div class="revision-badge">&#8593; ${b.revision}</div>`
+    : '';
+  return `
+    <div class="banner-card" onclick="openModal('${b.file}', '${escHtml(b.title)}', '${escHtml(b.note)}', '${b.size}')">
+      <div class="banner-img-wrap ${b.ar}">
+        <img
+          src="${b.file}"
+          alt="${escHtml(b.title)}"
+          loading="lazy"
+          onerror="this.outerHTML='<div style=\\'background:#f0f2f8;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#adb5bd;font-size:13px;padding:20px;text-align:center;\\'>画像準備中</div>'"
+        />
+      </div>
+      <div class="banner-card-body">
+        <span class="banner-type-tag">${b.type}</span>
+        <div class="banner-card-title">${b.title}</div>
+        <div class="banner-card-note">${b.size !== '—' ? b.size + ' / ' : ''}${truncate(b.note, 50)}</div>
+        ${revisionHtml}
+      </div>
+    </div>
+  `;
+}
+
+function escHtml(s) {
+  return String(s).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+}
+function truncate(s, n) {
+  return s.length > n ? s.slice(0, n) + '…' : s;
+}
+
+function initGalleries() {
+  document.getElementById('v3-grid').innerHTML = v3Banners.map(b => makeBannerCard(b, true)).join('');
+  document.getElementById('v2-grid').innerHTML = v2Banners.map(b => makeBannerCard(b, false)).join('');
+  document.getElementById('v1-grid').innerHTML = v1Banners.map(b => makeBannerCard(b, false)).join('');
+}
+
+// ===== ACCORDION =====
+function toggleAccordion(btn) {
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  const bodyId = btn.getAttribute('aria-controls');
+  const body = document.getElementById(bodyId);
+  btn.setAttribute('aria-expanded', !expanded);
+  if (!expanded) {
+    body.style.maxHeight = body.scrollHeight + 'px';
+  } else {
+    body.style.maxHeight = '0';
+  }
+}
+
+// ===== MODAL =====
+function openModal(src, title, note, size) {
+  const modal = document.getElementById('modal');
+  document.getElementById('modal-img').src = src;
+  document.getElementById('modal-img').alt = title;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-info-title').textContent = size !== '—' ? size : title;
+  document.getElementById('modal-info-note').textContent = note;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('modal-img').src = '';
+}
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ===== SCROLL SPY =====
+function initScrollSpy() {
+  const sections = ['v3-gallery-section', 'timeline-section', 'history-section', 'strategy-section'];
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const match = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        if (match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+}
+</script>
+
+</body>
+</html>
