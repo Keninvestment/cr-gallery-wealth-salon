@@ -875,6 +875,7 @@
         wealth-salon CR Gallery
       </a>
       <ul class="nav-links" role="list">
+        <li><a href="#v4-gallery-section">v4 Bフック</a></li>
         <li><a href="#v3-gallery-section">v3 最終版</a></li>
         <li><a href="#timeline-section">改定履歴</a></li>
         <li><a href="#history-section">v1/v2</a></li>
@@ -887,24 +888,39 @@
   <section class="hero" id="top">
     <div class="hero-badge">Confidential — Internal Use Only</div>
     <h1 class="hero-title">wealth-salon<br><span>CR Gallery</span></h1>
-    <p class="hero-sub">バナー広告CR・戦略・改定履歴 — v1 / v2 / v3</p>
+    <p class="hero-sub">バナー広告CR・戦略・改定履歴 — v1 / v2 / v3 / v4</p>
     <div class="hero-stats">
       <div class="stat-card">
-        <div class="stat-num">21</div>
+        <div class="stat-num">30</div>
         <div class="stat-label">Total CRs</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">3</div>
+        <div class="stat-num">4</div>
         <div class="stat-label">Versions</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">5</div>
-        <div class="stat-label">hookVectors</div>
+        <div class="stat-num">B</div>
+        <div class="stat-label">常識否定型</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">v3</div>
-        <div class="stat-label">最終採用版</div>
+        <div class="stat-num">v4</div>
+        <div class="stat-label">最新版</div>
       </div>
+    </div>
+  </section>
+
+  <!-- V4 GALLERY -->
+  <section id="v4-gallery-section">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-eyebrow">Latest Version</div>
+        <h2 class="section-title">
+          v4 Bフック 常識否定型
+          <span class="v3-badge">NEW</span>
+        </h2>
+        <p class="section-desc">2026-04-24確定。フック統一「節税しても、個人資産は増えない。」9訴求軸バリエーション。</p>
+      </div>
+      <div class="v3-grid" id="v4-grid"></div>
     </div>
   </section>
 
@@ -915,7 +931,7 @@
         <div class="section-eyebrow">Latest Version</div>
         <h2 class="section-title">
           v3 最終版バナー
-          <span class="v3-badge">FINAL</span>
+          <span class="v3-badge" style="background:linear-gradient(135deg,#607090,#405070);color:#fff;">PREV</span>
         </h2>
         <p class="section-desc">2026-04-19確定。6点の改定ポイントを反映した最終採用クリエイティブ。</p>
       </div>
@@ -1212,6 +1228,18 @@ document.getElementById('pw-input').addEventListener('keydown', function(e) {
 });
 
 // ===== BANNER DATA =====
+const v4Banners = [
+  { file: 'images/v4/banner_A-01.png', type: '常識否定型', title: 'A-01 法人↔個人乖離', size: '540x680', ar: 'ar-4x5', note: '法人通帳は増えたのに個人口座ゼロ。乖離の落差で常識を否定。', revision: 'Bフック統一' },
+  { file: 'images/v4/banner_A-02.png', type: '常識否定型', title: 'A-02 並売上×資産5億', size: '540x680', ar: 'ar-4x5', note: '並の売上で資産5億を築いた経営者は節税ではなかった、という対比訴求。', revision: 'Bフック統一' },
+  { file: 'images/v4/banner_A-03.png', type: '常識否定型', title: 'A-03 増えない構造', size: '540x680', ar: 'ar-4x5', note: '個人資産が増えない経営者に共通する"構造"の存在を告発。', revision: 'Bフック統一' },
+  { file: 'images/v4/banner_B-01.png', type: '常識否定型', title: 'B-01 とりあえず設計', size: '540x680', ar: 'ar-4x5', note: '役員報酬・家賃・社保を「とりあえず」で決め続ける設計ミスを指摘。', revision: 'Bフック統一' },
+  { file: 'images/v4/banner_B-02.png', type: '常識否定型', title: 'B-02 2-3期目タイミング', size: '540x680', ar: 'ar-4x5', note: '創業2-3期目が財務設計の絶好タイミングという逆張り訴求。', revision: 'Bフック統一' },
+  { file: 'images/v4/banner_B-03.png', type: '常識否定型', title: 'B-03 顧問税理士コスト', size: '540x680', ar: 'ar-4x5', note: '年商5,000万で月3万の税理士費用に問題提起。', revision: 'Bフック統一' },
+  { file: 'images/v4/banner_C-01.png', type: '常識否定型', title: 'C-01 副業1,000万法人化', size: '540x680', ar: 'ar-4x5', note: '副業1,000万超えでも順番を間違えると数百万損する警告。', revision: 'Bフック統一' },
+  { file: 'images/v4/banner_C-02.png', type: '常識否定型', title: 'C-02 誰と設計するか', size: '540x680', ar: 'ar-4x5', note: '法人化後の設計パートナー選びで5年後の資産が変わるという訴求。', revision: 'Bフック統一' },
+  { file: 'images/v4/banner_C-03.png', type: '常識否定型', title: 'C-03 10年の順番全11通', size: '540x680', ar: 'ar-4x5', note: '節税より先にやるべき順番（全11通）の網羅性訴求。', revision: 'Bフック統一' }
+];
+
 const v3Banners = [
   {
     file: 'images/v3/banner_v3_01_共感型.png',
@@ -1443,7 +1471,8 @@ function truncate(s, n) {
 }
 
 function initGalleries() {
-  document.getElementById('v3-grid').innerHTML = v3Banners.map(b => makeBannerCard(b, true)).join('');
+  document.getElementById('v4-grid').innerHTML = v4Banners.map(b => makeBannerCard(b, true)).join('');
+  document.getElementById('v3-grid').innerHTML = v3Banners.map(b => makeBannerCard(b, false)).join('');
   document.getElementById('v2-grid').innerHTML = v2Banners.map(b => makeBannerCard(b, false)).join('');
   document.getElementById('v1-grid').innerHTML = v1Banners.map(b => makeBannerCard(b, false)).join('');
 }
@@ -1486,7 +1515,7 @@ document.addEventListener('keydown', function(e) {
 
 // ===== SCROLL SPY =====
 function initScrollSpy() {
-  const sections = ['v3-gallery-section', 'timeline-section', 'history-section', 'strategy-section'];
+  const sections = ['v4-gallery-section', 'v3-gallery-section', 'timeline-section', 'history-section', 'strategy-section'];
   const navLinks = document.querySelectorAll('.nav-links a');
 
   const observer = new IntersectionObserver(entries => {
